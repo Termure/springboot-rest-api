@@ -1,8 +1,11 @@
 package net.javaguides.springboot.payload;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PostDto {
     private long id;
     private String title;
