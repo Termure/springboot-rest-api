@@ -8,6 +8,9 @@ import net.javaguides.springboot.repository.PostRepository;
 import net.javaguides.springboot.service.PostService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -19,5 +22,12 @@ public class PostServiceImpl implements PostService {
         Post savedPost = postRepository.save(PostMapper.mapToPost(postDto));
 
         return PostMapper.mapToPostDto(savedPost);
+    }
+
+    @Override
+    public List<PostDto> getAllPosts(){
+        List<Post> posts = postRepository.findAll();
+
+        return posts.stream().map(post -> PostMapper.mapToPostDto(post)).collect(Collectors.toList());
     }
 }
