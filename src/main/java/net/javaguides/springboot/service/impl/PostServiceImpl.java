@@ -26,42 +26,34 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPosts(){
-        List<Post> posts = postRepository.findAll();
-
-        return posts.stream().map(post -> PostMapper.mapToPostDto(post)).collect(Collectors.toList());
+    public List<PostDto> getAllPosts() {
+        return postRepository.findAll().stream().map(post -> PostMapper.mapToPostDto(post)).collect(Collectors.toList());
     }
 
     @Override
-    public PostDto getPostById(long id){
-        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
-
-        return PostMapper.mapToPostDto(post);
+    public PostDto getPostById(long id) {
+        return postRepository.findById(id)
+                .map(post -> {
+                    return PostMapper.mapToPostDto(post);
+                })
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
     }
 
     @Override
     public PostDto updatePostById(PostDto postDto, long id) {
-       /* get post by id from the database
-       Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("post", "id", id));
-       post.setTitle(postDto.getTitle());
-       post.setDescription(postDto.getDescription());
-       post.setContent(postDto.getContent());
-       Post updatedPost = postRepository.save(post);
-       return PostMapper.mapToPostDto(updatedPost); */
-
-       return postRepository.findById(id)
-               .map(_post -> {
-                   _post.setTitle(postDto.getTitle());
-                   _post.setDescription(postDto.getDescription());
-                   _post.setContent(postDto.getContent());
-                   return PostMapper.mapToPostDto(postRepository.save(_post));
-               }).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
+        return postRepository.findById(id)
+                .map(_post -> {
+                    _post.setTitle(postDto.getTitle());
+                    _post.setDescription(postDto.getDescription());
+                    _post.setContent(postDto.getContent());
+                    return PostMapper.mapToPostDto(postRepository.save(_post));
+                }).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
     }
 
     @Override
-    public void deletePostById(long id){
-       Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
-       postRepository.delete(post);
+    public void deletePostById(long id) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
+        postRepository.delete(post);
     }
 
 }
