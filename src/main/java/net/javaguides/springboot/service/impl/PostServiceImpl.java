@@ -27,15 +27,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDto> getAllPosts() {
-        return postRepository.findAll().stream().map(post -> PostMapper.mapToPostDto(post)).collect(Collectors.toList());
+        return postRepository.findAll().stream().map(PostMapper::mapToPostDto).collect(Collectors.toList());
     }
 
     @Override
     public PostDto getPostById(long id) {
         return postRepository.findById(id)
-                .map(post -> {
-                    return PostMapper.mapToPostDto(post);
-                })
+                .map(PostMapper::mapToPostDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
     }
 
