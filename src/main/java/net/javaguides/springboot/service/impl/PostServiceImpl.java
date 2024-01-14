@@ -6,6 +6,9 @@ import net.javaguides.springboot.mapper.PostMapper;
 import net.javaguides.springboot.payload.PostDto;
 import net.javaguides.springboot.repository.PostRepository;
 import net.javaguides.springboot.service.PostService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import net.javaguides.springboot.exception.*;
 
@@ -26,8 +29,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPosts() {
-        return postRepository.findAll().stream().map(PostMapper::mapToPostDto).collect(Collectors.toList());
+    public List<PostDto> getAllPosts(int pageNo, int pageSize) {
+        // create Pageable object
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        Page<Post> posts = postRepository.findAll(pageable);
+
+        // get content of page object
+        List<Post> listOfPosts = posts.getContent();
+
+        return listOfPosts.stream().map(PostMapper::mapToPostDto).collect(Collectors.toList());
     }
 
     @Override
