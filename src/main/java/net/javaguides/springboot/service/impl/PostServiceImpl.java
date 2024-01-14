@@ -41,15 +41,14 @@ public class PostServiceImpl implements PostService {
 
         List<PostDto> content = listOfPosts.stream().map(PostMapper::mapToPostDto).collect(Collectors.toList());
 
-        PostResponse postResponse = new PostResponse();
-        postResponse.setContent(content);
-        postResponse.setPageNo(posts.getNumber());
-        postResponse.setPageSize(posts.getSize());
-        postResponse.setTotalElements(posts.getTotalElements());
-        postResponse.setTotalPages(posts.getTotalPages());
-        postResponse.setLast(posts.isLast());
-
-        return postResponse;
+        return PostResponse.builder()
+            .content(content)
+            .pageNo(posts.getNumber())
+            .pageSize(posts.getSize())
+            .totalElements(posts.getTotalElements())
+            .totalPages(posts.getTotalPages())
+            .last(posts.isLast())
+        .build();
     }
 
     @Override
@@ -62,11 +61,14 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDto updatePostById(PostDto postDto, long id) {
         return postRepository.findById(id)
-                .map(_post -> {
-                    _post.setTitle(postDto.getTitle());
-                    _post.setDescription(postDto.getDescription());
-                    _post.setContent(postDto.getContent());
-                    return PostMapper.mapToPostDto(postRepository.save(_post));
+                .map(post -> {
+                    post = Post.builder()
+                        .id(id) //very important -> when builder creates a new object, if the id is not set, new object will be created because id is null
+                        .title(postDto.getTitle())
+                        .description(postDto.getDescription())
+                        .content(postDto.getContent())
+                        .build();
+                    return PostMapper.mapToPostDto(postRepository.save(post));
                 }).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
     }
 
@@ -75,5 +77,4 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
         postRepository.delete(post);
     }
-
 }
