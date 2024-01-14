@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import net.javaguides.springboot.entity.Post;
 import net.javaguides.springboot.mapper.PostMapper;
 import net.javaguides.springboot.payload.PostDto;
+import net.javaguides.springboot.payload.PostResponse;
 import net.javaguides.springboot.repository.PostRepository;
 import net.javaguides.springboot.service.PostService;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPosts(int pageNo, int pageSize) {
+    public PostResponse getAllPosts(int pageNo, int pageSize) {
         // create Pageable object
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
@@ -38,7 +39,17 @@ public class PostServiceImpl implements PostService {
         // get content of page object
         List<Post> listOfPosts = posts.getContent();
 
-        return listOfPosts.stream().map(PostMapper::mapToPostDto).collect(Collectors.toList());
+        List<PostDto> content = listOfPosts.stream().map(PostMapper::mapToPostDto).collect(Collectors.toList());
+
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(content);
+        postResponse.setPageNo(posts.getNumber());
+        postResponse.setPageSize(posts.getSize());
+        postResponse.setTotalElements(posts.getTotalElements());
+        postResponse.setTotalPages(posts.getTotalPages());
+        postResponse.setLast(posts.isLast());
+
+        return postResponse;
     }
 
     @Override

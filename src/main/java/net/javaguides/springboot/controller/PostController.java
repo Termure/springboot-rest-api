@@ -2,6 +2,7 @@ package net.javaguides.springboot.controller;
 
 import lombok.AllArgsConstructor;
 import net.javaguides.springboot.payload.PostDto;
+import net.javaguides.springboot.payload.PostResponse;
 import net.javaguides.springboot.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,11 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<PostDto>> getAllPosts(
+    public PostResponse getAllPosts(
             @RequestParam(defaultValue = "0", required = false) int pageNo,
             @RequestParam(defaultValue = "10", required = false) int pageSize
     ){
-        return new ResponseEntity<>(postService.getAllPosts(pageNo, pageSize), HttpStatus.OK);
+        return postService.getAllPosts(pageNo, pageSize);
     }
 
     @GetMapping("/posts/{id}")
