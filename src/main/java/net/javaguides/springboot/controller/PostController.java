@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static net.javaguides.springboot.utils.AppConstants.*;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api")
@@ -22,10 +24,10 @@ public class PostController {
 
     @GetMapping("/posts")
     public PostResponse getAllPosts(
-            @RequestParam(defaultValue = "0", required = false) int pageNo,
-            @RequestParam(defaultValue = "10", required = false) int pageSize,
-            @RequestParam(defaultValue = "id", required = false) String sortCriteria,
-            @RequestParam(defaultValue = "asc", required = false) String sortDir
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER,      required = false) int pageNo,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE,        required = false) int pageSize,
+            @RequestParam(defaultValue = DEFAULT_SORTING_CRITERIA, required = false) String sortCriteria,
+            @RequestParam(defaultValue = DEFAULT_SORT_DIRECTION  , required = false) String sortDir
     ){
         return postService.getAllPosts(pageNo, pageSize, sortCriteria, sortDir);
     }
