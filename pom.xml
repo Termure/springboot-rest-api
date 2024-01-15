@@ -14,7 +14,7 @@
 	<name>springboot-rest-api</name>
 	<description>Demo project for Spring Boot REST API</description>
 	<properties>
-		<java.version>20</java.version>
+		<java.version>21</java.version>
 	</properties>
 
 	<!-- Additional lines to be added here... -->
