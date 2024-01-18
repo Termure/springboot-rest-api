@@ -22,4 +22,11 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
+    public Comment(long id, String name, String email, String body) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.body = body;
+    }
 }
