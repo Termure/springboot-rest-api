@@ -11,6 +11,9 @@ import net.javaguides.springboot.repository.PostRepository;
 import net.javaguides.springboot.service.CommentService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -24,5 +27,10 @@ public class CommentServiceImpl implements CommentService {
         comment.setPost(post);
 
         return CommentMapper.maptoCommentDto(commentRepository.save(comment));
+    }
+
+    public List<CommentDto> getCommentsByPostId(long postId){
+        List<Comment> comments = commentRepository.findByPostId(postId);
+        return comments.stream().map(CommentMapper::maptoCommentDto).collect(Collectors.toList());
     }
 }
