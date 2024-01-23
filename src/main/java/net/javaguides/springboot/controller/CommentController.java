@@ -3,6 +3,7 @@ package net.javaguides.springboot.controller;
 import lombok.AllArgsConstructor;
 import net.javaguides.springboot.payload.CommentDto;
 import net.javaguides.springboot.service.CommentService;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,5 +31,12 @@ public class CommentController {
     public ResponseEntity<CommentDto> getCommentById(@PathVariable long commentId, @PathVariable long postId){
        CommentDto commentDto = commentService.getCommentById(commentId, postId);
        return new ResponseEntity<>(commentDto, HttpStatus.OK);
+    }
+
+    @PutMapping("/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<?> updateCommentById(@PathVariable long commentId,
+                                                        @PathVariable long postId,
+                                                        @RequestBody CommentDto commentDto) throws BadRequestException {
+        return ResponseEntity.ok( commentService.updateCommentById(commentId, postId, commentDto));
     }
 }
