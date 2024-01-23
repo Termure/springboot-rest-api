@@ -33,4 +33,10 @@ public class CommentServiceImpl implements CommentService {
         List<Comment> comments = commentRepository.findByPostId(postId);
         return comments.stream().map(CommentMapper::maptoCommentDto).collect(Collectors.toList());
     }
+
+    public CommentDto getCommentById(long commentId, long postId){
+        return commentRepository.findByIdAndPostId(commentId, postId)
+                .map(CommentMapper::maptoCommentDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment", "commentId", commentId));
+    }
 }
