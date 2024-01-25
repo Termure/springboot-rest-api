@@ -72,6 +72,7 @@ public class PostServiceImpl implements PostService {
                         .title(postDto.getTitle())
                         .description(postDto.getDescription())
                         .content(postDto.getContent())
+                        .comments(post.getComments())
                         .build();
                     return PostMapper.mapToPostDto(postRepository.save(post));
                 }).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
