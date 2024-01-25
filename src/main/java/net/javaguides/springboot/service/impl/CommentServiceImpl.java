@@ -9,7 +9,6 @@ import net.javaguides.springboot.payload.CommentDto;
 import net.javaguides.springboot.repository.CommentRepository;
 import net.javaguides.springboot.repository.PostRepository;
 import net.javaguides.springboot.service.CommentService;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,24 +40,18 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Comment", "commentId", commentId));
     }
 
-    public CommentDto updateCommentById(long commentId, long postId, CommentDto commentDto) throws BadRequestException {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new ResourceNotFoundException("Post", "postId", postId));
+    public CommentDto updateCommentById(long commentId, long postId, CommentDto commentDto){
+        return commentRepository.findByIdAndPostId(commentId, postId)
+                .map(comment -> {
+                    comment = Comment.builder()
+                        .id(commentId)
+                        .body(commentDto.getBody())
+                        .email((commentDto.getEmail()))
+                        .name(commentDto.getName())
+                        .post(comment.getPost())
+                        .build();
+                    return CommentMapper.maptoCommentDto(commentRepository.save(comment));
 
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new ResourceNotFoundException("Comment", "commentId", commentId));
-
-        if (!comment.getPost().getId().equals(post.getId())) {
-            throw new BadRequestException("Comment with id " + commentId + " does not belong to post with id " + postId);
-        }
-
-        Comment updatedComment = Comment.builder()
-                .id(commentId)
-                .name(commentDto.getName())
-                .email(commentDto.getEmail())
-                .body(commentDto.getBody())
-                .post(post)
-                .build();
-        return CommentMapper.maptoCommentDto(commentRepository.save(updatedComment));
+                }).orElseThrow(() -> new ResourceNotFoundException("Comment", "commentId", commentId));
     }
 }
