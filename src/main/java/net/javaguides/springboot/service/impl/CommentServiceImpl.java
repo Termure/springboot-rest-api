@@ -12,6 +12,7 @@ import net.javaguides.springboot.service.CommentService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,5 +54,10 @@ public class CommentServiceImpl implements CommentService {
                     return CommentMapper.maptoCommentDto(commentRepository.save(comment));
 
                 }).orElseThrow(() -> new ResourceNotFoundException("Comment", "commentId", commentId));
+    }
+
+    public void deleteCommentByIdAndPost(long commentId, long postId){
+        Optional<Comment> comment = commentRepository.findByIdAndPostId(commentId, postId);
+        comment.ifPresent(object -> commentRepository.deleteById(object.getId()));
     }
 }
