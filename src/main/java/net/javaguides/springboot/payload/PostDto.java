@@ -2,6 +2,8 @@ package net.javaguides.springboot.payload;
 
 import lombok.*;
 
+import java.util.List;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -11,4 +13,5 @@ public class PostDto {
     private String title;
     private String description;
     private String content;
+    private List<CommentDto> comments;
 }
