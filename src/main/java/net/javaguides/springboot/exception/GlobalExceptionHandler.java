@@ -21,4 +21,14 @@ public class GlobalExceptionHandler {
                 .details(webRequest.getDescription(false))
                 .build(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorDetails> handleBadRequest(Exception exception,
+                                                               WebRequest webRequest){
+        return new ResponseEntity<>(ErrorDetails.builder()
+                .timestamp(new Date())
+                .message(exception.getMessage())
+                .details(webRequest.getDescription(false))
+                .build(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
