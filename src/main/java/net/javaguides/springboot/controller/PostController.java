@@ -1,5 +1,6 @@
 package net.javaguides.springboot.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.javaguides.springboot.payload.PostDto;
 import net.javaguides.springboot.payload.PostResponse;
@@ -18,7 +19,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto){
+    public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto){
         return new ResponseEntity<>(postService.createPost(postDto), HttpStatus.CREATED);
     }
 
@@ -38,7 +39,7 @@ public class PostController {
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity<PostDto> updatePostById(@RequestBody PostDto postDto, @PathVariable long id){
+    public ResponseEntity<PostDto> updatePostById(@Valid @RequestBody PostDto postDto, @PathVariable long id){
         return ResponseEntity.ok(postService.updatePostById(postDto, id));
     }
 
