@@ -1,6 +1,7 @@
 package net.javaguides.springboot.service.impl;
 
 import net.javaguides.springboot.payload.LoginDto;
+import net.javaguides.springboot.security.JwtTokenProvider;
 import net.javaguides.springboot.service.AuthService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,10 +11,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager,
+                           JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     public String login(LoginDto loginDto){
@@ -22,6 +26,7 @@ public class AuthServiceImpl implements AuthService {
                 loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "User Logged-in successfully!";
+
+        return jwtTokenProvider.generateToken(authentication);
     }
 }
