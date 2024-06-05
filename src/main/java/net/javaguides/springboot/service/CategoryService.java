@@ -4,4 +4,5 @@ import net.javaguides.springboot.payload.CategoryDto;
 
 public interface CategoryService {
     CategoryDto addCategory(CategoryDto categoryDto);
+    CategoryDto getCategory(Long id);
 }
