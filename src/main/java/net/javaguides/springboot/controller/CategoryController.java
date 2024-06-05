@@ -1,7 +1,6 @@
 package net.javaguides.springboot.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import net.javaguides.springboot.payload.CategoryDto;
 import net.javaguides.springboot.service.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/categories")
 @AllArgsConstructor
-@NoArgsConstructor
 public class CategoryController {
     private CategoryService categoryService;
 
