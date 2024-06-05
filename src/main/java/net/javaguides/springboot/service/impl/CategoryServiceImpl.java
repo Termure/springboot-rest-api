@@ -42,4 +42,19 @@ public class CategoryServiceImpl implements CategoryService {
         return categories.stream().map((category) -> modelMapper.map(category, CategoryDto.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public CategoryDto updateCategory(CategoryDto categoryDto, Long categoryId){
+        return categoryRepository.findById(categoryId)
+                .map((category) -> {
+                    category = Category.builder()
+                            .id(categoryId)
+                            .name(categoryDto.getName())
+                            .description(categoryDto.getDescription())
+                            .posts(category.getPosts())
+                            .build();
+                    return modelMapper.map(categoryRepository.save(category), CategoryDto.class);
+
+                }).orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryId));
+    }
 }
