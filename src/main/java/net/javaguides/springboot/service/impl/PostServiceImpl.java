@@ -1,12 +1,14 @@
 package net.javaguides.springboot.service.impl;
 
 import lombok.AllArgsConstructor;
+import net.javaguides.springboot.entity.Category;
 import net.javaguides.springboot.entity.Post;
-import net.javaguides.springboot.mapper.PostMapper;
 import net.javaguides.springboot.payload.PostDto;
 import net.javaguides.springboot.payload.PostResponse;
+import net.javaguides.springboot.repository.CategoryRepository;
 import net.javaguides.springboot.repository.PostRepository;
 import net.javaguides.springboot.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +25,20 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
 
+    private final CategoryRepository categoryRepository;
+
+    private final ModelMapper modelMapper;
+
     @Override
     public PostDto createPost(PostDto postDto){
-        Post savedPost = postRepository.save(PostMapper.mapToPost(postDto));
+        Category category = categoryRepository.findById(postDto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("category", "id", postDto.getCategoryId()));
 
-        return PostMapper.mapToPostDto(savedPost);
+        Post post = modelMapper.map(postDto, Post.class);
+        post.setCategory(category);
+        Post savedPost = postRepository.save(post);
+
+        return modelMapper.map(savedPost, PostDto.class);
     }
 
     @Override
@@ -44,7 +55,7 @@ public class PostServiceImpl implements PostService {
         // get content of page object
         List<Post> listOfPosts = posts.getContent();
 
-        List<PostDto> content = listOfPosts.stream().map(PostMapper::mapToPostDto).collect(Collectors.toList());
+        List<PostDto> content = listOfPosts.stream().map(post -> modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
 
         return PostResponse.builder()
             .content(content)
@@ -59,7 +70,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDto getPostById(long id) {
         return postRepository.findById(id)
-                .map(PostMapper::mapToPostDto)
+                .map(post -> modelMapper.map(post, PostDto.class))
                 .orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
     }
 
@@ -74,7 +85,8 @@ public class PostServiceImpl implements PostService {
                         .content(postDto.getContent())
                         .comments(post.getComments())
                         .build();
-                    return PostMapper.mapToPostDto(postRepository.save(post));
+
+                    return modelMapper.map(postRepository.save(post), PostDto.class);
                 }).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
     }
 
