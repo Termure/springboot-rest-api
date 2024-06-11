@@ -76,6 +76,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto updatePostById(PostDto postDto, long id) {
+        Category category = categoryRepository.findById(postDto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("category", "id", postDto.getCategoryId()));
         return postRepository.findById(id)
                 .map(post -> {
                     post = Post.builder()
@@ -84,6 +86,7 @@ public class PostServiceImpl implements PostService {
                         .description(postDto.getDescription())
                         .content(postDto.getContent())
                         .comments(post.getComments())
+                        .category(category)
                         .build();
 
                     return modelMapper.map(postRepository.save(post), PostDto.class);
