@@ -94,7 +94,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePostById(long id) {
-        postRepository.deleteById(id);
+    public void deletePostById(long id) { postRepository.deleteById(id); }
+
+    @Override
+    public List<PostDto> getPostByCategoryId(Long id){
+        categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("category", "id", id));
+        List<Post> posts = postRepository.findByCategoryId(id);
+        return posts.stream().map(post -> modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static net.javaguides.springboot.utils.AppConstants.*;
 
 @RestController
@@ -47,6 +49,11 @@ public class PostController {
     public ResponseEntity<String> deletePost(@PathVariable long id){
         postService.deletePostById(id);
         return ResponseEntity.ok("Post Deleted successfully!");
+    }
+
+    @GetMapping("posts/category/{id}")
+    public ResponseEntity<List<PostDto>> getPostByCategory(@PathVariable long id){
+        return ResponseEntity.ok(postService.getPostByCategoryId(id));
     }
 
 }
