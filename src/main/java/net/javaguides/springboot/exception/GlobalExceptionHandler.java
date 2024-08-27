@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,9 +20,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDetails> handleResourceNotFound(ResourceNotFoundException exception,
                                                                WebRequest webRequest){
         return new ResponseEntity<>(ErrorDetails.builder()
-                .timestamp(new Date())
+                .timestamp(LocalDateTime.now())
                 .message(exception.getMessage())
-                .details(webRequest.getDescription(false))
+                .path(webRequest.getDescription(false))
+                .errorCode("POST_NOT_FOUND")
                 .build(), HttpStatus.NOT_FOUND);
     }
 
@@ -30,9 +31,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDetails> handleBadRequest(Exception exception,
                                                                WebRequest webRequest){
         return new ResponseEntity<>(ErrorDetails.builder()
-                .timestamp(new Date())
+                .timestamp(LocalDateTime.now())
                 .message(exception.getMessage())
-                .details(webRequest.getDescription(false))
+                .path(webRequest.getDescription(false))
                 .build(), HttpStatus.BAD_REQUEST);
     }
 

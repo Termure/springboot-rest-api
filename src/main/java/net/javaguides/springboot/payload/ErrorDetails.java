@@ -5,14 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ErrorDetails {
-    private Date timestamp;
+    private LocalDateTime timestamp;
     private String message;
-    private String details;
+    private String path;
+    private String errorCode;
 }
